@@ -1,0 +1,20 @@
+{% extends "../base.html" %}
+{% load static %}
+{% block title %}All Service{% endblock%}
+{% block content %}
+<div class="container">
+    {% load mptt_tags %}
+    <ul>
+        {% recursetree service_list %}
+        <li>
+            {{ node.name }}
+            {% if not node.is_leaf_node %}
+            <ul class="children">
+                {{ children }}
+            </ul>
+            {% endif %}
+        </li>
+        {% endrecursetree %}
+    </ul>
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends './admin-dashboard.html' %}
+{% block title %}Admin Panel - Staffs{% endblock%}
+{% load render_table from django_tables2 %}
+{% block admin_dashboard %}
+<h2 class="text-danger text-center fw-bolder mb-3">Staff List</h2>
+<input class="form-control" id="myInput" type="text" placeholder="Search...">
+<div class="container my-5">
+    {% render_table table %}
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function ($) {
+        $("td[data-href*='/staff-form/']").click(
+            function () {
+                window.location = $(this).data("href");
+            });
+        $("td[data-href*='/staff-delete/']").click(
+            function () {
+                let ans = confirm('Are you sure you want to delete this user?')
+                if (ans == true) {
+                    window.location = $(this).data("href");
+                }
+            });
+        $("td[data-href*='/staff-activate/']").click(
+            function () {
+                window.location = $(this).data("href");
+            }).css({
+            'cursor': 'pointer',
+            'text-decoration': 'underline',
+            "color": "navy",
+        });
+        $("#myInput").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#myTable tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+</script>
+{% endblock admin_dashboard %}

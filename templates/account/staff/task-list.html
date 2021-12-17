@@ -1,0 +1,49 @@
+{% extends './staff-dashboard.html' %}
+{% block title %}Task List{% endblock%}
+{% block staff_dashboard %}
+<section class="py-5">
+    <div class="container px-4 px-lg-5 mt-5">
+        <div class="fw-bolder fs-3 text-danger text-center">Tasks List</div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th scope="col">Order number</th>
+                    <th scope="col">My task</th>
+                    <th scope="col">Phone no</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">Area</th>
+                    <th scope="col">Delivery date</th>
+                    <th scope="col">Delivery time</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Mark as</th>
+                    <th scope="col">Last updated</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                <tr>
+                    <td>{{ task.order.order_number }}</td>
+                    <td>{{ task }}</td>
+                    <td>{{ task.order.phone }}</td>
+                    <td>{{ task.order.full_address }}</td>
+                    <td>{{ task.order.area }}</td>
+                    <td>{{ task.order.date }}</td>
+                    <td>{{ task.order.time }}</td>
+                    <td>{{ task.get_status_display }}</td>
+                    <td>
+                        {% if task.status == 'Completed' %}
+                        <a href="{% url 'accounts:order_preparing' task.id %}" type="button"
+                            class="btn btn-sm btn-outline-success">undo</a>
+                        {% else %}
+                        <a href="{% url 'accounts:order_completed' task.id %}" type="button"
+                            class="btn btn-sm btn-outline-primary">completed</a>
+                        {% endif %}
+                    </td>
+                    <td>{{ task.updated_at }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock staff_dashboard %}

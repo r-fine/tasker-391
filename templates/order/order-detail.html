@@ -1,0 +1,16 @@
+{% extends "../base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Order Detail{% endblock%}
+{% block content %}
+<div class="container m-5 p-5">
+    <h2>Order Details:</h2>
+    <p>Order Number: {{ order.order_number }}</p>
+    <p>User: {{ order.user }}</p>
+    <h2>Order Items:</h2>
+    {% for item in order_items %}
+    <p>{{ item }}</p>
+    {% empty %}
+    <div class="alert alert-danger" style="width: 20%;">No Items</div>
+    {% endfor %}
+</div>
+{% endblock %}

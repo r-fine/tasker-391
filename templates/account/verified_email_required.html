@@ -1,0 +1,8 @@
+{% extends "./account_base.html" %}
+{% block title %}Verify Your E-mail Address{% endblock %}
+{% block account_extra %}
+<h1>Verify Your E-mail Address</h1>
+{% url 'account_email' as email_url %}
+<p>Please verify your email address within 24 hours.</p>
+<p>Otherwise your order will be cancelled.</p>
+{% endblock account_extra %}

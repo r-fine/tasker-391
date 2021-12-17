@@ -1,0 +1,37 @@
+{% extends "../base.html" %}
+{% load static %}
+<!-- {% load crispy_forms_tags %} -->
+{% block title %}Home{% endblock%}
+{% block content %}
+{% block head %}
+{% endblock head %}
+<header class="bg-info py-5">
+    <div class="container px-4 px-lg-5 my-3">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">Company Name</h1>
+            <p class="lead fw-normal text-dark-50 mb-0">company slogan</p>
+            {% if user.is_superuser %}
+            <a href="{% url 'accounts:dashboard_admin' %}" class="btn btn-lg btn-secondary mt-5">Admin Panel</a>
+            {% endif %}
+        </div>
+    </div>
+    <span id="home"></span>
+</header>
+
+<section class="py-5">
+    <div class="container px-4 px-lg-5 mt-5">
+        {% include 'includes/message-alert.html' %}
+        <div class="container mb-4">
+            <div class="row justify-content-start">
+                <div class="col-9 col-sm-4">
+                    <span class="text-primary fs-4 fs-sm-3 fw-bold">All Services</span>
+                    <hr class="d-sm-none">
+                </div>
+            </div>
+        </div>
+        {% include 'includes/product-card.html' %}
+        {% include 'includes/pagination-generic.html' %}
+    </div>
+</section>
+
+{% endblock content %}

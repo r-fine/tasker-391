@@ -1,0 +1,64 @@
+{% extends "../base.html" %}
+{% load static %}
+<!-- {% load crispy_forms_tags %} -->
+{% block title %}{{ service.name }}{% endblock%}
+{% block content %}
+<div class="container mt-5 pt-5 mb-5 pb-5">
+    <dvi class="row">
+        <div class="col-8">
+            <h1>{{ service.name }}</h1>
+            <p>Description: {{ service.description }}</p>
+            <img alt="Responsive image" src="{{ service.image.url }}" />
+        </div>
+        <div class="col-4">
+            <h3>Avaibale services</h3>
+            <div class="accordion" id="accordionExample">
+                {% for s in service_options %}
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading{{s.id}}">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapse{{s.id}}" aria-expanded="true" aria-controls="collapse{{s.id}}">
+                            {{ s.name }}
+                        </button>
+                    </h2>
+                    <div id="collapse{{s.id}}" class="accordion-collapse collapse" aria-labelledby="heading{{s.id}}"
+                        data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <p>
+                                Summary: <br>
+                                <span class="text-muted">{{ s.summary }}</span>
+                            </p>
+                            <p>
+                                Notes: <br>
+                                <span class="text-muted">{{ s.notes }}</span>
+                            </p>
+                            <a href="{% url "orders:add_item" s.id %}" class="btn btn-outline-secondary">Book</a>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="alert alert-warning">No listed service</div>
+                {% endfor %}
+            </div>
+        </div>
+    </dvi>
+    <div class="container mt-5">
+        <form method="POST">
+            {% include 'includes/message-alert.html' %}
+            {% csrf_token %}
+            {{ form|crispy }}
+            {% if ordered %}
+            {% if is_reviewed %}
+            <button class="btn btn-secondary mt-3" type="submit">Update Review</button>
+            {% else %}
+            <button class="btn btn-secondary mt-3" type="submit">Submit Review</button>
+            {% endif %}
+            {% else %}
+            <button class="btn btn-secondary mt-3" type="submit" disabled>Submit Review</button>
+            <br>
+            <span class="text-muted">You need purchase this order first to review</span>
+            {% endif %}
+        </form>
+    </div>
+</div>
+{% endblock %}

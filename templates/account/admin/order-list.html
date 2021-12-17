@@ -1,0 +1,120 @@
+{% extends './admin-dashboard.html' %}
+{% block title %}Order List{% endblock%}
+{% block head %}
+<style>
+    .hiddenRow {
+        padding: 0 !important;
+    }
+</style>
+{% endblock head %}
+{% block admin_dashboard %}
+<section class="py-5">
+    <div class="container px-4 px-lg-5 mt-5">
+        <div class="fw-bolder fs-3 text-danger text-center">Order List</div>
+        <table class="table table-hover" style="border-collapse:collapse;">
+            <thead>
+                <tr>
+                    <th scope="col">Order number</th>
+                    <th scope="col">Full name</th>
+                    <th scope="col">Phone no.</th>
+                    <th scope="col">Delivery date</th>
+                    <th scope="col">Delivery time</th>
+                    <th scope="col">Area</th>
+                    <th scope="col">Placed on</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            {% for o in orders %}
+            <tbody>
+                <tr>
+                    <td>{{ o.order_number }}</td>
+                    <td>
+                        {{ o.full_name }}
+                        {% if not o.user_verification_status %}
+                        <span class="text-danger">(unverified)</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ o.phone }}</td>
+                    <td>{{ o.date }}</td>
+                    <td>{{ o.time }}</td>
+                    <td>{{ o.area }}</td>
+                    <td>{{ o.created_at }}</td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="#" type="button" class="btn btn-sm btn-outline-secondary accordion-toggle"
+                                data-bs-toggle="collapse" data-bs-target="#accordion{{o.id}}">Details</a>
+                            <a href="{% url 'accounts:delete_order' o.id %}" type="button"
+                                class="btn btn-sm btn-outline-danger"
+                                onclick="return confirm('Are you sure you want to delete this order?')">
+                                Delete
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="6" class="hiddenRow">
+                        <div id="accordion{{o.id}}" class="accordian-body collapse my-2">
+                            <div class="d-flex mb-2 text-primary fw-bold justify-content-around">
+                                <div>Order details:</div>
+                                <div>Change status</div>
+                            </div>
+                            {% for item in o.order_item.all %}
+                            <div class="d-flex align-items-center">
+                                <div><img class="me-3" src="{{ item.service.image.url }}" alt="s img" width="50px"
+                                        height="50px">
+                                </div>
+                                <div>{{ item }}</div>
+                                <div
+                                    class="badge rounded-pill bg-{% if item.status == 'Pending' %}secondary{%elif item.status == 'Accepted'%}primary{%elif item.status == 'Preparing'%}info{%elif item.status == 'Completed'%}success{%elif item.status == 'Cancelled'%}danger{%endif%} ms-auto me-3">
+                                    {{ item.status }}
+                                </div>
+                                {% if item.status == 'Pending' or item.status == 'Accepted' or item.status == 'Preparing' %}
+                                <div>
+                                    <a href="{% url 'accounts:cancel_order' item.id %}" type="button"
+                                        class="text-danger"
+                                        onclick="return confirm('Are you sure you want to cancel this order?')">
+                                        <i class="bi bi-x-circle"></i></a>
+                                </div>
+                                {% else %}
+                                <div class="ms-3"></div>
+                                {% endif %}
+                                <div class="me-5">
+                                    <a href="{% url 'accounts:edit_order_item' item.id %}" class="btn btn-sm">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                </div>
+                                <div class="btn-group ms-5">
+                                    <a href="{% url 'accounts:order_accepted' item.id %}" type="button"
+                                        class="btn btn-sm btn-outline-primary">Accepted</a>
+                                    <a href="{% url 'accounts:order_preparing' item.id %}" type="button"
+                                        class="btn btn-sm btn-outline-info">Preparing</a>
+                                    <a href="{% url 'accounts:order_completed' item.id %}" type="button"
+                                        class="btn btn-sm btn-outline-success">Completed</a>
+                                    <a href="{% url 'accounts:order_cancelled' item.id %}" type="button"
+                                        class="btn btn-sm btn-outline-danger">Cancelled</a>
+                                </div>
+                            </div>
+                            <p></p>
+                            {% endfor %}
+
+                        </div>
+                    </td>
+                    <td colspan="6" class="hiddenRow">
+                        <div id="accordion{{o.id}}" class="accordian-body collapse my-2">
+                            <div class="d-flex text-primary fw-bold justify-content-around mb-2">Assigned staff</div>
+                            {% for item in o.order_item.all %}
+                            <div class="d-flex justify-content-around align-items-center my-4">
+                                <div class="my-2">{{ item.assigned_staff }}</div>
+                                <p></p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+            {% endfor %}
+        </table>
+        {% include 'includes/pagination-generic.html' %}
+    </div>
+</section>
+{% endblock admin_dashboard %}

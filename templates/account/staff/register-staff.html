@@ -1,0 +1,29 @@
+{% extends "account/account_base.html" %}
+{% load crispy_forms_tags %}
+{% load widget_tweaks %}
+{% block title %}Staff - Signup{% endblock %}
+{% block account_extra %}
+<h1 class="text-center">Staff Registration</h1>
+<p>Already have an account? Then please <a href="{% url "account_login" %}">sign in</a>.
+</p>
+<form class="signup" id="signup_form" method="post" enctype='multipart/form-data'
+    action="{% url 'accounts:register_staff' %}">
+    {% csrf_token %}
+    <!-- {{ form|crispy }} -->
+    {{ form.email|as_crispy_field }}
+    {{ form.first_name|as_crispy_field }}
+    {{ form.last_name|as_crispy_field }}
+    {{ form.password1|as_crispy_field }}
+    {{ form.password2|as_crispy_field }}
+    <div class="form-group">
+        {% render_field form.is_staff required="required" class="checkboxinput" %}
+        <label for="">Confirm register as Staff</label>
+    </div>
+    {% if redirect_field_value %}
+    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+    {% endif %}
+    <div class="row justify-content-xs-center mt-3">
+        <button class="btn btn-secondary" type="submit">Sign Up &raquo;</button>
+    </div>
+</form>
+{% endblock account_extra %}

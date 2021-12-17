@@ -1,0 +1,60 @@
+{% extends "../base.html" %}
+{% load crispy_forms_tags %}
+{% block title %}Place Order{% endblock%}
+{% block content %}
+<div class="row ms-5 ps-5 mb-5 pb-5 me-5 pe-5">
+    <div class="col-6">
+        <div class="card ms-5 me-3 mt-5">
+            <div class="card-body mx-5 mb-2">
+
+                <h1 class="text-center text-danger fw-bolder">{{ user }}</h1>
+                <h1 class="text-center">Place Order</h1>
+                <form method='POST'>
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    {% if item_exists %}
+                    <div class="row justify-content-xs-center mt-3">
+                        <button type="submit" class="btn btn-secondary">Submit</button>
+                    </div>
+                    {% else %}
+                    <div class="row justify-content-xs-center mt-3">
+                        <button type="submit" class="btn btn-secondary" disabled>Submit</button>
+                    </div>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="card ms-5 me-5 mt-5 pt-5">
+            <div class="card-body">
+                <h2>Order List</h2>
+                {% include 'includes/message-alert.html' %}
+                <ul>
+                    {% for item in order_items %}
+                    <li>
+                        {{ item }} <a type="button" class="btn btn-sm btn-danger"
+                            href="{% url 'orders:remove_item' item.service.id item.id %}">Remove</a>
+                    </li>
+                    {% empty %}
+                    <div class="alert alert-danger me-5">
+                        Your order list is empty!
+                    </div>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#id_area').select2({
+            placeholder: "Select an area",
+            allowClear: true
+        });
+    });
+</script>
+{% endblock %}

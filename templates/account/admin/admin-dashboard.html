@@ -1,0 +1,101 @@
+{% extends "../dashboard_base.html" %}
+{% block title %}Admin Panel - Dashboard{% endblock%}
+{% block content %}
+{% block head %}{% endblock head %}
+{% include 'includes/svg-dashboard.html' %}
+<div class="row">
+    <div class="col-2">
+        <div class="d-flex flex-column flex-shrink-0 p-3 bg-light" style="height: 100%;">
+            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+                <a class="navbar-brand ms-2" aria-current="page" href="/"><img src="/static/logo4.png" alt="brand logo"
+                        style="aspect-ratio:1039/588;width:135px;"></a>
+                <span class="fs-4 fw-bold ms-2">Admin Panel</span>
+            </a>
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li>
+                    <a href="{% url 'accounts:dashboard_admin' %}" class="nav-link link-dark">
+                        <svg class="bi me-2" width="16" height="16">
+                            <use xlink:href="#speedometer2" /></svg>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:order_list' %}" class="nav-link link-dark">
+                        <svg class="bi me-2" width="16" height="16">
+                            <use xlink:href="#table" /></svg>
+                        Orders
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:service_table' %}" class="nav-link link-dark">
+                        <svg class="bi me-2" width="16" height="16">
+                            <use xlink:href="#list" /></svg>
+                        Services
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:service_option_table' %}" class="nav-link link-dark">
+                        <svg class="bi me-2" width="16" height="16">
+                            <use xlink:href="#grid" /></svg>
+                        Service Options
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url 'accounts:staff_table' %}" class="nav-link link-dark">
+                        <svg class="bi me-2" width="16" height="16">
+                            <use xlink:href="#people-circle" /></svg>
+                        Staffs
+                    </a>
+                </li>
+            </ul>
+            <hr>
+            <div class="dropdown">
+                <a href="#" class="d-flex align-items-center link-dark text-decoration-none dropdown-toggle"
+                    id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="/static/person.jpg" alt="" width="32" height="32" class="rounded-circle me-2">
+                    <strong>Account</strong>
+                </a>
+                <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
+                    <li><a class="dropdown-item" href="{% url "accounts:user_profile" request.user.id %}">Profile</a>
+                    </li>
+                    <li>
+                        <hr class="dropdown-divider">
+                    </li>
+                    <li>
+                        <form class="d-none" id="logOutForm" method="post" action="{% url 'account_logout' %}">
+                            {% csrf_token %}
+                        </form>
+                        <a class="dropdown-item" href="#" onclick="logOut()">Sign out</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-10">
+        <!-- <section class="py-5"> -->
+        <!-- <div class="container my-5"> -->
+        <div class="d-flex justify-content-center">
+            {% include 'includes/message-alert.html' %}
+        </div>
+        {% block admin_dashboard %}
+        {% endblock admin_dashboard %}
+        <!-- </div> -->
+        <!-- </section> -->
+    </div>
+</div>
+<script type="text/javascript">
+    (function () {
+        'use strict'
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+            new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    })()
+
+    function logOut() {
+        document.getElementById('logOutForm').submit();
+        return false;
+    }
+</script>
+{% endblock content %}

@@ -1,0 +1,75 @@
+{% extends "../base.html" %}
+{% block title %}Order History{% endblock%}
+{% block content %}
+<section class="py-5">
+    <div class="container px-4 px-lg-5 mt-5">
+        {% include 'includes/message-alert.html' %}
+        <div class="fw-bolder fs-3 text-secondary">Order History</div>
+        {% for o in orders %}
+        <div class="card my-3">
+            <div class="card-header d-flex">
+                <div>Order <span class="text-primary">#{{ o.order_number }}</span></div>
+                <div class="ms-auto"><span class="fw-bold">Placed on:</span> {{ o.created_at }}</div>
+            </div>
+            <div class="card-body bg-light">
+                {% for item in o.order_item.all %}
+                <div class="d-flex align-items-center">
+                    <div><img class="me-3" src="{{ item.service.image.url }}" alt="s img" width="50px" height="50px">
+                    </div>
+                    <div>{{ item }}</div>
+                    <div
+                        class="badge rounded-pill bg-{% if item.status == 'Pending' %}secondary{%elif item.status == 'Accepted'%}primary{%elif item.status == 'Preparing'%}info{%elif item.status == 'Completed'%}success{%elif item.status == 'Cancelled'%}danger{%endif%} ms-auto me-3">
+                        {{ item.status }}
+                    </div>
+                    {% if item.status == 'Pending' or item.status == 'Accepted' or item.status == 'Preparing' %}
+                    <div>
+                        <a href="{% url 'accounts:cancel_order' item.id %}" type="button" class="text-danger"
+                            onclick="return confirm('Are you sure you want to cancel this order?')">
+                            <i class="bi bi-x-circle"></i></a>
+                    </div>
+                    {% else %}
+                    <div class="ms-3"></div>
+                    {% endif %}
+                </div>
+                <p class="card-text"></p>
+                {% endfor %}
+            </div>
+            <div class="card-footer text-muted d-flex">
+                <span class="fw-bold">Estimated Delivery: </span>{{ o.date }} {{ o.time }}
+                <div class="ms-auto"><a href="#" type="button" class="btn btn-sm btn-outline-dark">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        <nav class="mt-4" aria-label="Page navigation sample">
+            {% if orders.has_other_pages %}
+            <ul class="pagination justify-content-center">
+                {% if orders.has_previous %}
+                <li class="page-item"><a class="page-link" href="?page={{orders.previous_page_number}}#home">&laquo;
+                        Previous</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled"><a class="page-link" href="#">Previous</a></li>
+                {% endif %}
+
+                {% for i in orders.paginator.page_range %}
+                {% if orders.number == i %}
+                <li class="page-item active"><a class="page-link" href="#">{{i}}</a></li>
+                {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{i}}#home">{{i}}</a></li>
+                {% endif %}
+                {% endfor %}
+
+                {% if orders.has_next %}
+                <li class="page-item"><a class="page-link" href="?page={{orders.next_page_number}}#home">Next
+                        &raquo;</a>
+                </li>
+                {% else %}
+                <li class="page-item disabled"><a class="page-link" href="#">Next</a></li>
+                {% endif %}
+            </ul>
+            {% endif %}
+        </nav>
+    </div>
+</section>
+{% endblock %}
