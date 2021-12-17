@@ -37,7 +37,7 @@ class AdminDashboard(TemplateView):
             'pending': orders.filter(status='Pending', is_ordered=True).count(),
             'total_staffs': staffs.filter(is_active=True).count(),
             'staffs_approval_pending': staffs.filter(is_active=False).count(),
-            'total_service_options': ServiceOption.objects.all().count(),
+            'total_services': Service.objects.filter(level=1).count(),
         })
         return context
 
