@@ -8,7 +8,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-kb!nn%q25by6@+0rqr#_uz9xy(q$=ycyg4=t#plp)m4qhm3s6&'
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['servicio-391.herokuapp.com', '127.0.0.1']
 
@@ -80,10 +80,10 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'dce14kqghip00j',
-        'USER': 'iddkgwxcttfkma',
-        'PASSWORD': '93639a07d8a5ad7674669e2c1a8b802657908f4583a59887b06153fbd8379b61',
-        'HOST': 'ec2-54-171-25-232.eu-west-1.compute.amazonaws.com',
+        'NAME': 'd4u7ooip9hgqaa',
+        'USER': 'tzopvjlqycsvda',
+        'PASSWORD': 'f454331e7417ceb06a0510533868d0ee32d703a7f1a31a307b35f24eb9de534d',
+        'HOST': 'ec2-52-19-164-214.eu-west-1.compute.amazonaws.com',
         'PORT': '5432',
     }
 }
