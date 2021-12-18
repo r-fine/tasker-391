@@ -1,0 +1,59 @@
+{% extends "../base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Search{% endblock%}
+{% block content %}
+<section class="py-5">
+    <div class="container px-4 px-lg-5 mt-5">
+        {% if q %}
+        <h1>Results containing "{{ q }}"</h1>
+        <p>
+            {% with results.count as total_results %}
+            Found {{ total_results }} result{{ total_results|pluralize }}
+            {% endwith %}
+        </p>
+
+        <div class="row gx-4 gx-lg-5 row-cols-1 row-cols-md-3 row-cols-xl-4 justify-content-start">
+            {% for s in results %}
+            <div class="accordion mb-3" id="accordionExample">
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="heading{{s.id}}">
+                        <button style="height: 80px;" class="accordion-button collapsed" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#collapse{{s.id}}" aria-expanded="true"
+                            aria-controls="collapse{{s.id}}">
+                            {{ s.name }}
+                        </button>
+                    </h2>
+                    <div id="collapse{{s.id}}" class="accordion-collapse collapse" aria-labelledby="heading{{s.id}}"
+                        data-bs-parent="#accordionExample">
+                        <div class="accordion-body">
+                            <p>
+                                Summary: <br>
+                                <span class="text-muted">{{ s.summary }}</span>
+                            </p>
+                            <p>
+                                Notes: <br>
+                                <span class="text-muted">{{ s.notes }}</span>
+                            </p>
+                            <a href="{% url 'orders:add_item' s.id %}" class="btn btn-outline-secondary mb-1">Book</a>
+                            <a href="{{ s.service.get_absolute_url }}" class="btn btn-outline-secondary">See all related
+                                servicecs</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="alert alert-danger">There are no results for your query.</div>
+            {% endfor %}
+        </div>
+        <div style="margin-bottom: 50%;"></div>
+        {% else %}
+        <h1>Search for posts</h1>
+        <form method="get">
+            {{ form|crispy }}
+            <input class="btn btn-primary my-1" type="submit" value="Search">
+        </form>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

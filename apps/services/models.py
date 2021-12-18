@@ -3,6 +3,8 @@ from django.db import models
 from django.conf import settings
 from mptt.models import MPTTModel, TreeForeignKey
 
+from django.contrib.postgres.indexes import GinIndex
+
 
 class Service(MPTTModel):
     name = models.CharField(
@@ -33,6 +35,11 @@ class Service(MPTTModel):
 
     class Meta:
         verbose_name_plural = 'Services'
+        indexes = [
+            GinIndex(
+                name='GinIndex', fields=['name'], opclasses=['gin_trgm_ops']
+            ),
+        ]
 
     def get_absolute_url(self):
         return reverse('services:service_detail', args=[self.slug])
@@ -97,6 +104,11 @@ class ServiceOption(models.Model):
 
     class Meta:
         ordering = ['name']
+        indexes = [
+            GinIndex(
+                name='NewGinIndex', fields=['name'], opclasses=['gin_trgm_ops']
+            ),
+        ]
 
     def edit_url(self):
         return reverse('accounts:edit_service_option', args=[self.pk])

@@ -9,18 +9,40 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-
 from .models import *
-from .forms import ReviewRatingForm
+from .forms import ReviewRatingForm, SearchForm
 
 from apps.orders.models import Order, OrderItem
+
+from django.db.models.functions import Greatest
+from django.contrib.postgres.search import TrigramSimilarity
+
+
+def search(request):
+    form = SearchForm
+
+    results = []
+
+    if 'q' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            q = form.cleaned_data['q']
+
+    res1 = ServiceOption.objects.annotate(similarity=TrigramSimilarity(
+        'name', q)).filter(similarity__gte=0.1).order_by('-similarity')
+    res2 = ServiceOption.objects.annotate(similarity=TrigramSimilarity(
+        'service__name', q)).filter(similarity__gte=0.1).order_by('-similarity')
+
+    results = res1 | res2
+
+    return render(request, 'service/search.html', {'q': q, 'results': results})
 
 
 class HomeView(ListView):
     model = Service
     template_name = 'service/home.html'
     context_object_name = 'subservices'
-    paginate_by = 4
+    paginate_by = 8
     queryset = Service.objects.filter(level=1)
 
 
