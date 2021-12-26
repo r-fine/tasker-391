@@ -27,12 +27,16 @@ INSTALLED_APPS = [
     'crispy_forms',
     'widget_tweaks',
     'django_tables2',
+    'django_filters',
     'mptt',
     'allauth',
     'allauth.account',
+    'captcha',
+    'ckeditor',
     'apps.accounts.apps.AccountsConfig',
     'apps.services',
     'apps.orders',
+    'tawkto',
 ]
 
 MIDDLEWARE = [
@@ -60,6 +64,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'apps.services.context_processors.services',
+                'apps.orders.context_processors.order_item_counter',
             ],
         },
     },
@@ -69,7 +74,6 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 # DATABASES = {
 #     'default': {
@@ -80,16 +84,25 @@ WSGI_APPLICATION = 'core.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'd4u7ooip9hgqaa',
-        'USER': 'tzopvjlqycsvda',
-        'PASSWORD': 'f454331e7417ceb06a0510533868d0ee32d703a7f1a31a307b35f24eb9de534d',
-        'HOST': 'ec2-52-19-164-214.eu-west-1.compute.amazonaws.com',
+        'NAME': 'd61nk468mi3f61',
+        'USER': 'zzfsmdzhgdtkeh',
+        'PASSWORD': '8898862d89d589ab5b35560ef8fc690cb91e9de6946a35cd6962f72678897aae',
+        'HOST': 'ec2-54-220-166-184.eu-west-1.compute.amazonaws.com',
         'PORT': '5432',
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
+#         'NAME': 'cse391Final',
+#         'USER': 'postgres',
+#         'PASSWORD': 'pgpasswd',
+#         'HOST': '127.0.0.1',
+#         'PORT': '5432',
+#     }
+# }
 
 # Password validation
-# https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -145,7 +158,6 @@ if DEBUG:
     ]
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
@@ -154,7 +166,6 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # ]
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -163,10 +174,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
+# crispy forms template pack
+
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# login urls
 
 LOGIN_URL = "/auth/login"
 LOGIN_REDIRECT_URL = "/"
+
+# authentication settings
 
 AUTH_USER_MODEL = 'accounts.LocalUser'
 
@@ -176,6 +193,7 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # Email setting
+
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 
 # allauth settings
@@ -197,3 +215,33 @@ ACCOUNT_LOGIN_ATTEMPTS_LIMIT = 5
 ACCOUNT_LOGIN_ATTEMPTS_TIMEOUT = 300
 
 SITE_ID = 1
+
+# ckeditor settings
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'Custom',
+        'toolbar_Custom': [
+            ['Format'],
+            ['Bold', 'Italic', 'Underline'],
+            [
+                'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-',
+                'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'
+            ],
+            ['Link', 'Unlink'],
+            ['RemoveFormat', 'Source']
+        ],
+        'height': 300,
+        'width': 550,
+    },
+    'minimal': {
+        'toolbar': [
+            ['Bold', 'Italic', 'Underline'],
+            ['Smiley'],
+        ],
+        'height': 140,
+        'width': 465,
+    },
+}
+
+TAWKTO_ID_SITE = 'servicio-391.herokuapp.com'

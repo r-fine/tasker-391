@@ -1,51 +1,109 @@
 {% extends "../base.html" %}
+{% load static %}
 {% load crispy_forms_tags %}
 {% block title %}Place Order{% endblock%}
+{% block head %}
+<style>
+    .asteriskField {
+        color: red;
+    }
+</style>
+{% endblock head %}
 {% block content %}
-<div class="row ms-5 ps-5 mb-5 pb-5 me-5 pe-5">
-    <div class="col-6">
-        <div class="card ms-5 me-3 mt-5">
-            <div class="card-body mx-5 mb-2">
-
-                <h1 class="text-center text-danger fw-bolder">{{ user }}</h1>
-                <h1 class="text-center">Place Order</h1>
-                <form method='POST'>
-                    {% csrf_token %}
-                    {{ form|crispy }}
-                    {% if item_exists %}
-                    <div class="row justify-content-xs-center mt-3">
-                        <button type="submit" class="btn btn-secondary">Submit</button>
-                    </div>
-                    {% else %}
-                    <div class="row justify-content-xs-center mt-3">
-                        <button type="submit" class="btn btn-secondary" disabled>Submit</button>
-                    </div>
-                    {% endif %}
-                </form>
-            </div>
-        </div>
-    </div>
-    <div class="col-6">
-        <div class="card ms-5 me-5 mt-5 pt-5">
-            <div class="card-body">
-                <h2>Order List</h2>
+<div class="container my-5">
+    <main>
+        <div class="row g-5 mt-5 pt-5 justify-content-center">
+            <div class="col-md-5 col-lg-4 order-md-last">
                 {% include 'includes/message-alert.html' %}
-                <ul>
+                <h4 class="d-flex justify-content-between align-items-center mb-3">
+                    <span class="text-primary">Order List</span>
+                    <span class="badge bg-primary rounded-pill">{{ num_of_items }}</span>
+                </h4>
+                <ul class="list-group mb-3">
                     {% for item in order_items %}
-                    <li>
-                        {{ item }} <a type="button" class="btn btn-sm btn-danger"
-                            href="{% url 'orders:remove_item' item.service.id item.id %}">Remove</a>
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div>
+                            <h6 class="text-dark my-2">{{ forloop.counter }}. {{ item }}</h6>
+                            <!-- <small class="text-danger">Brief description</small> -->
+                        </div>
+                        <a class="text-danger my-2" href="{% url 'orders:remove_item' item.service.id item.id %}"><i
+                                class="bi bi-trash-fill"></i></a>
                     </li>
                     {% empty %}
-                    <div class="alert alert-danger me-5">
+                    <div class="alert alert-danger">
                         Your order list is empty!
                     </div>
                     {% endfor %}
                 </ul>
             </div>
+            <div class="col-md-7 col-lg-8" style="max-width: 660px;">
+                <h4 class="mb-3">Billing address</h4>
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        <div class="col-sm-6">
+                            {{ form.first_name|as_crispy_field }}
+                        </div>
+
+                        <div class="col-sm-6">
+                            {{ form.last_name|as_crispy_field }}
+                        </div>
+
+                        <div class="col-6">
+                            {{ form.phone|as_crispy_field }}
+                        </div>
+
+                        <div class="col-12">
+                            {{ form.email|as_crispy_field }}
+                        </div>
+
+                        <div class="col-12">
+                            {{ form.address_line_1|as_crispy_field }}
+                        </div>
+
+                        <div class="col-12">
+                            {{ form.address_line_2|as_crispy_field }}
+                        </div>
+
+                        <div class="col-md-5">
+                            {{ form.area|as_crispy_field }}
+                        </div>
+
+                        <div class="col-md-4">
+                            <label for="id_date" class="form-label my-0">Delivery date<span
+                                    class="text-danger">*</span></label>
+                            <input type="date" min={{min_date}} max={{max_date}} name="date" class="form-control"
+                                id="id_date" required>
+                        </div>
+
+                        <div class="col-md-3">
+                            <!-- <label for="id_time" class="form-label my-0">
+                                Delivery date
+                                <span class="text-danger"><a class="text-danger" data-bs-toggle="tooltip"
+                                        data-bs-placement="bottom"
+                                        title="please pick from 9am to 9pm (interval is 1 hour) i.e. 9:00 AM, 12:00 PM, 7:00 PM">
+                                        <i class="bi bi-exclamation-circle-fill"></i>
+                                    </a>
+                                </span>
+                            </label>
+                            <input type="time" step="3600" min="09:00" max="21:00" name="time" class="form-control"
+                                id="id_time" required>
+                            <small class="text-muted">Office hours are from 9am to 9pm</small> -->
+                            {{ form.time|as_crispy_field }}
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+                    {% if item_exists %}
+                    <button class="w-100 btn btn-primary btn-lg" type="submit">Place Order</button>
+                    {% endif %}
+                </form>
+            </div>
         </div>
-    </div>
+    </main>
+
 </div>
+<script src="{% static 'js/popper.min.js' %}" type="text/javascript"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"
     integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>

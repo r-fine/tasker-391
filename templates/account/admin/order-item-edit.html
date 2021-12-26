@@ -2,19 +2,21 @@
 {% load crispy_forms_tags %}
 {% block title %}Order Item - Edit{% endblock%}
 {% block content %}
-<section class="mt-5 pt-5 mb-5 pb-5" style="min-height:84vh">
-    <div class="card mx-auto mt-5 pt-5" style="max-width: 425px; margin-top:100px;">
-        <div class="card-body">
-            {% include 'includes/message-alert.html' %}
-            <h1>Edit Order</h1>
-            <form method='POST'>
-                {% csrf_token %}
-                {{ form|crispy }}
-                <div class="row justify-content-xs-center mt-3">
-                    <button type="submit" class="btn btn-secondary">Save</button>
-                </div>
-            </form>
-        </div>
+<section class="my-2 pt-3">
+    <div class="mx-auto mb-5" style="max-width: 450px;">
+        {% include 'includes/message-alert.html' %}
+        <hr>
+        <h1 class="text-center text-primary">Edit Order</h1>
+        <hr>
+        <form method='POST'>
+            {% csrf_token %}
+            {{ form|crispy }}
+            <div class="row justify-content-xs-center mt-3 mx-auto">
+                <button type="submit" class="btn btn-secondary">Save</button>
+                <a href="{% url 'accounts:order_list' %}" type="button" class="btn btn-outline-secondary mt-3">&laquo;
+                    Back</a>
+            </div>
+        </form>
     </div>
 </section>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"

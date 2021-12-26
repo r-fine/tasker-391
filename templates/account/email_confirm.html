@@ -2,7 +2,7 @@
 {% load account %}
 {% block title %}Confirm E-mail Address{% endblock %}
 {% block account_extra %}
-<h1>Confirm E-mail Address</h1>
+<h1 class="text-primary">Confirm E-mail Address</h1>
 {% if confirmation %}
 {% user_display confirmation.email_address.user as user_display %}
 <p>Please confirm that <a href="mailto:{{ email }}">{{ email }}</a> is an e-mail address for user {{ user_display }}.

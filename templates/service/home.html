@@ -5,20 +5,9 @@
 {% block content %}
 {% block head %}
 {% endblock head %}
-<header class="bg-info py-5">
-    <div class="container px-4 px-lg-5 my-3">
-        <div class="text-center text-white">
-            <h1 class="display-4 fw-bolder">Company Name</h1>
-            <p class="lead fw-normal text-dark-50 mb-0">company slogan</p>
-            {% if user.is_superuser %}
-            <a href="{% url 'accounts:dashboard_admin' %}" class="btn btn-lg btn-secondary mt-5">Admin Panel</a>
-            {% endif %}
-        </div>
-    </div>
-    <span id="home"></span>
-</header>
 
-<section class="py-5">
+{% include 'includes/header.html' %}
+<section class="pb-5">
     <div class="container px-4 px-lg-5 mt-5">
         {% include 'includes/message-alert.html' %}
         <div class="container mb-4">

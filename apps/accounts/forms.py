@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 
 from .models import LocalUser, Staff
+from apps.services.models import Service
 
 
 class SignupForm(forms.Form):
@@ -41,6 +42,9 @@ class RegisterStaffForm(UserCreationForm):
 
 class StaffEditForm(forms.ModelForm):
     # is_active = forms.BooleanField(widget=forms.NullBooleanSelect())
+    # department = forms.ModelChoiceField(
+    #     queryset=Service.objects.filter(level=0)
+    # )
 
     class Meta:
         model = Staff
@@ -51,4 +55,4 @@ class LocalUserForm(forms.ModelForm):
 
     class Meta:
         model = LocalUser
-        fields = ['first_name', 'last_name', 'email']
+        fields = ['username', 'first_name', 'last_name', 'email']

@@ -5,7 +5,7 @@ from .models import *
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['order_number', 'id', 'area', 'created_at',
+    list_display = ['order_number', 'id', 'user', 'created_at',
                     'updated_at', 'user_verification_status']
     exclude = ['order_item']
 

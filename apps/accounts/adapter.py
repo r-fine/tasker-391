@@ -8,7 +8,7 @@ class AccountAdapter(DefaultAccountAdapter):
 
     def get_login_redirect_url(self, request):
         if request.user.is_superuser:
-            url = 'accounts:dashboard_admin'
+            url = 'accounts:admin_dashboard'
         elif request.user.is_staff:
             url = 'accounts:staff_dashboard'
         else:

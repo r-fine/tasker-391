@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponseForbidden
+from django.http import Http404
 from django.urls import reverse_lazy, reverse
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView, SingleObjectMixin
 from django.views.generic.edit import FormView
 from django.views import View
+from django.core.exceptions import PermissionDenied
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -29,9 +30,9 @@ def search(request):
             q = form.cleaned_data['q']
 
     res1 = ServiceOption.objects.annotate(similarity=TrigramSimilarity(
-        'name', q)).filter(similarity__gte=0.1).order_by('-similarity')
+        'name', q)).select_related('service').filter(similarity__gte=0.1).order_by('-similarity')
     res2 = ServiceOption.objects.annotate(similarity=TrigramSimilarity(
-        'service__name', q)).filter(similarity__gte=0.1).order_by('-similarity')
+        'service__name', q)).select_related('service').filter(similarity__gte=0.1).order_by('-similarity')
 
     results = res1 | res2
 
@@ -64,17 +65,23 @@ class ServiceDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        form = ReviewRatingForm()
+        form.fields["service_option"].queryset = ServiceOption.objects.filter(
+            service=self.object
+        )
+        my_review = ReviewRating.objects.select_related('user').get(
+            user=self.request.user, service=self.object, status=True
+        ) if (self.request.user.is_authenticated and ReviewRating.objects.filter(
+            user=self.request.user, service_id=self.object.id, status=True
+        ).exists()) else None
+
         context.update({
-            'service_options': ServiceOption.objects.filter(service=self.object),
-            'ordered': OrderItem.objects.filter(user=self.request.user, service__in=ServiceOption.objects.filter(service=self.object), is_ordered=True, is_reviewable=True)
-            if self.request.user.is_authenticated else None,
-            'reviews': ReviewRating.objects.filter(
-                service_id=self.object.id,
-                status=True
-            ),
-            'is_reviewed': ReviewRating.objects.get(user=self.request.user, service=self.object)
-            if (self.request.user.is_authenticated and ReviewRating.objects.filter(service_id=self.object.id, status=True).exists()) else None,
-            'form': ReviewRatingForm(),
+            'service_options': ServiceOption.objects.select_related('service').filter(service=self.object),
+            'ordered': OrderItem.objects.select_related('service').filter(user=self.request.user, service__in=ServiceOption.objects.filter(service=self.object), is_ordered=True, is_reviewable=True) if self.request.user.is_authenticated else None,
+            'reviews': ReviewRating.objects.select_related('user').prefetch_related('service_option').filter(service_id=self.object.id, status=True).exclude(user=self.request.user) if self.request.user.is_authenticated else ReviewRating.objects.select_related('user').prefetch_related('service_option').filter(service_id=self.object.id, status=True),
+            'my_review': my_review,
+            'form': form,
         })
         return context
 
@@ -90,6 +97,7 @@ class ReviewRatingFormView(LoginRequiredMixin, SuccessMessageMixin, SingleObject
                 user=self.request.user, service=self.object
             )
             return ReviewRatingForm(self.request.POST, instance=reviews)
+
         except ReviewRating.DoesNotExist:
             return ReviewRatingForm(self.request.POST)
 
@@ -123,3 +131,12 @@ class ServiceSingleView(View):
     def post(self, request, *args, **kwargs):
         view = ReviewRatingFormView.as_view()
         return view(request, *args, **kwargs)
+
+
+def delete_review(request, review_id):
+    review = ReviewRating.objects.get(pk=review_id)
+    if request.user.is_superuser or review.user.id == request.user.id:
+        review.delete()
+        return redirect('services:service_detail', review.service.slug)
+    else:
+        raise PermissionDenied

@@ -46,4 +46,8 @@ class ServiceAdmin(DraggableMPTTAdmin):
 
 
 admin.site.register(ServiceOption)
-admin.site.register(ReviewRating)
+
+
+@admin.register(ReviewRating)
+class ReviewRatingAdmin(admin.ModelAdmin):
+    list_display = ['subject', 'created_at', 'updated_at']

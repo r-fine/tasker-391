@@ -23,12 +23,12 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
     $(document).ready(function ($) {
-        $("td[data-href*='/service-edit/']")
+        $("td[data-href*='/service/edit/']")
             .click(
                 function () {
                     window.location = $(this).data("href");
                 });
-        $("td[data-href*='/service-delete/']").click(
+        $("td[data-href*='/service/delete/']").click(
             function () {
                 let ans = confirm('Are you sure you want to delete this user?')
                 if (ans == true) {

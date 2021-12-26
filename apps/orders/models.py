@@ -17,7 +17,16 @@ class Order(models.Model):
         ('Paltan', 'Paltan'), ('Ramna', 'Ramna'), ('Rampura', 'Rampura'), ('Sabujbagh', 'Sabujbagh'), ('Sadarghat', 'Sadarghat'), ('Satarkul', 'Satarkul'), ('Shahbagh', 'Shahbagh'), ('Sher-e-Bangla Nagar',
                                                                                                                                                                                        'Sher-e-Bangla Nagar'), ('Shyampur', 'Shyampur'), ('Sutrapur', 'Sutrapur'), ('Tejgaon', 'Tejgaon'), ('Uttara', 'Uttara'), ('Uttarkhan', 'Uttarkhan'), ('Vatara', 'Vatara'), ('Wari', 'Wari'),
     )
-
+    HOURS = (
+        ('9:00 a.m.', '9:00 a.m.'), ('10:00 a.m.',
+                                     '10:00 a.m.'), ('11:00 a.m.', '11:00 a.m.'),
+        ('12:00 p.m.', '12:00 p.m.'), ('1:00 p.m.',
+                                       '1:00 p.m.'), ('2:00 p.m.', '2:00 p.m.'),
+        ('3:00 p.m.', '3:00 p.m.'), ('4:00 p.m.',
+                                     '4:00 p.m.'), ('5:00 p.m.', '5:00 p.m.'),
+        ('6:00 p.m.', '6:00 p.m.'), ('7:00 p.m.',
+                                     '7:00 p.m.'), ('8:00 p.m.', '8:00 p.m.'),
+    )
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
@@ -42,11 +51,10 @@ class Order(models.Model):
         auto_now=False,
         auto_now_add=False,
     )
-    time = models.TimeField(
+    time = models.CharField(
         verbose_name='Delivery Time',
-        auto_now=False,
-        auto_now_add=False,
-
+        max_length=10,
+        choices=HOURS,
     )
     is_ordered = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True, editable=False)
@@ -54,10 +62,11 @@ class Order(models.Model):
 
     # class Meta:
     #     ordering = ['-created_at']
-
+    @property
     def full_name(self):
         return f'{self.first_name} {self.last_name}'
 
+    @property
     def full_address(self):
         return f'{self.address_line_1} {self.address_line_2}'
 
@@ -80,6 +89,7 @@ class OrderItem(models.Model):
     )
     order = models.ForeignKey(
         Order,
+        related_name='order',
         on_delete=models.CASCADE,
         null=True,
         blank=True,
@@ -88,7 +98,10 @@ class OrderItem(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE
     )
-    service = models.ForeignKey(ServiceOption, on_delete=models.CASCADE)
+    service = models.ForeignKey(
+        ServiceOption,
+        on_delete=models.CASCADE
+    )
     is_ordered = models.BooleanField(default=False)
     status = models.CharField(max_length=10, choices=STATUS, default='Pending')
     assigned_staff = models.ForeignKey(

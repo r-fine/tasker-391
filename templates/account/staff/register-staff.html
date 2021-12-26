@@ -3,7 +3,7 @@
 {% load widget_tweaks %}
 {% block title %}Staff - Signup{% endblock %}
 {% block account_extra %}
-<h1 class="text-center">Staff Registration</h1>
+<h1 class="text-center text-primary">Staff Registration</h1>
 <p>Already have an account? Then please <a href="{% url "account_login" %}">sign in</a>.
 </p>
 <form class="signup" id="signup_form" method="post" enctype='multipart/form-data'
@@ -22,7 +22,7 @@
     {% if redirect_field_value %}
     <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
     {% endif %}
-    <div class="row justify-content-xs-center mt-3">
+    <div class="row justify-content-xs-center mt-3 mx-auto">
         <button class="btn btn-secondary" type="submit">Sign Up &raquo;</button>
     </div>
 </form>

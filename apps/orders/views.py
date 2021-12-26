@@ -1,3 +1,4 @@
+from django.http.response import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic.detail import DetailView
@@ -6,7 +7,6 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
-from django.db.models import Q
 
 from allauth.account.decorators import verified_email_required
 
@@ -56,9 +56,22 @@ class OrderCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        min_date = datetime.date.today() + datetime.timedelta(days=1)
+        min_date = min_date.strftime("%Y-%m-%d")
+        max_date = datetime.date.today() + datetime.timedelta(days=7)
+        max_date = max_date.strftime("%Y-%m-%d")
+
+        order_items = OrderItem.objects.select_related('service').filter(
+            user=self.request.user,
+            is_ordered=False
+        )
         context.update({
-            'order_items': OrderItem.objects.filter(user=self.request.user, is_ordered=False),
-            'item_exists': OrderItem.objects.filter(user=self.request.user, is_ordered=False).exists()
+            'order_items': order_items,
+            'item_exists': order_items.exists(),
+            'num_of_items': order_items.count(),
+            'min_date': min_date,
+            'max_date': max_date,
         })
 
         return context
@@ -86,7 +99,8 @@ def add_item(request, service_option_id):
         order_item.save()
         messages.success(request, 'Added to order list.')
 
-    return redirect('orders:order_create')
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    # return redirect('orders:create_order')
 
 
 @login_required
@@ -101,20 +115,5 @@ def remove_item(request, service_option_id, order_item_id):
     order_item.delete()
     messages.error(request, 'Removed from order')
 
-    return redirect('orders:order_create')
-
-
-class OrderDetailView(LoginRequiredMixin, DetailView):
-    model = Order
-    template_name = 'order/order-detail.html'
-    context_object_name = 'order'
-
-    def get_queryset(self):
-        return Order.objects.filter(Q(user=self.request.user) | Q(assigned_staff__user=self.request.user))
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update({
-            'order_items': OrderItem.objects.filter(order=self.object)
-        })
-        return context
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    # return redirect('orders:create_order')

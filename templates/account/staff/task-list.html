@@ -1,9 +1,9 @@
 {% extends './staff-dashboard.html' %}
 {% block title %}Task List{% endblock%}
 {% block staff_dashboard %}
-<section class="py-5">
-    <div class="container px-4 px-lg-5 mt-5">
-        <div class="fw-bolder fs-3 text-danger text-center">Tasks List</div>
+<section class="py-5 mx-0">
+    <div class="container my-5">
+        <div class="fw-bolder fs-3 text-danger text-center mb-3">Tasks List</div>
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -17,6 +17,7 @@
                     <th scope="col">Status</th>
                     <th scope="col">Mark as</th>
                     <th scope="col">Last updated</th>
+                    <th scope="col">Invoice</th>
                 </tr>
             </thead>
             <tbody>
@@ -27,7 +28,7 @@
                     <td>{{ task.order.phone }}</td>
                     <td>{{ task.order.full_address }}</td>
                     <td>{{ task.order.area }}</td>
-                    <td>{{ task.order.date }}</td>
+                    <td>{{ task.order.date|date:"Y-m-d" }}</td>
                     <td>{{ task.order.time }}</td>
                     <td>{{ task.get_status_display }}</td>
                     <td>
@@ -40,6 +41,14 @@
                         {% endif %}
                     </td>
                     <td>{{ task.updated_at }}</td>
+                    <td>
+                        <div class="d-flex justify-content-center">
+                            <a href="{% url 'accounts:order_invoice' task.order.id %}" type="button"
+                                class="text-danger fs-5">
+                                <i class="bi bi-download"></i>
+                            </a>
+                        </div>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

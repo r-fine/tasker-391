@@ -17,6 +17,9 @@ class StaffTable(tables.Table):
     deletable = {
         'td': {'data-href': lambda record: record.delete_url}
     }
+    schedule = {
+        'td': {'data-href': lambda record: record.schedule_table_url}
+    }
     is_active = tables.Column(
         attrs=activate,
     )
@@ -34,12 +37,15 @@ class StaffTable(tables.Table):
     )
     full_name = tables.Column(orderable=False)
     department__name = tables.Column(verbose_name='Department')
+    schedule = tables.Column(
+        attrs=schedule, default='show'
+    )
 
     class Meta:
         model = Staff
         template_name = 'django_tables2/bootstrap4.html'
         fields = (
-            'full_name', 'department__name', 'phone', 'address',
+            'id', 'full_name', 'department__name', 'phone', 'address',
             'is_active', 'edit', 'delete',
         )
         attrs = {
@@ -67,12 +73,12 @@ class ServiceTable(tables.Table):
             '<button class="btn btn-sm"><i class="bi bi-trash"></i></button>'
         )
     )
-    is_parent = tables.Column(orderable=False)
+    is_root = tables.Column(orderable=False)
 
     class Meta:
         model = Service
         template_name = 'django_tables2/bootstrap4.html'
-        fields = ('name', 'is_parent', 'edit', 'delete',)
+        fields = ('name', 'is_root', 'edit', 'delete',)
         attrs = {
             'class': 'table table-striped table-hover',
             'id': 'myTable',

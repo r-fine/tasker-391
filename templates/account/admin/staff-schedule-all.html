@@ -1,0 +1,45 @@
+{% extends './admin-dashboard.html' %}
+{% load crispy_forms_tags %}
+{% block title %}All Staff Schedule{% endblock%}
+{% load render_table from django_tables2 %}
+{% block admin_dashboard %}
+<div class="container my-5 pb-5">
+    <div class="container px-4 px-lg-5 my-5 pb-5">
+        <div class="row" style="max-width: 450px;">
+            <form method="GET">
+                Filter by:
+                {{ myFilter.form|crispy }}
+                <button class="btn btn-primary mt-2">Filter</button>
+            </form>
+        </div>
+        {% for staff in staffs %}
+        <div class="fw-bold pt-5">
+            <p>Name: {{ staff.full_name }}</p>
+            <p>ID: {{ staff.id }}</p>
+            <p>Department: {{ staff.department }}</p>
+        </div>
+        <table class="table table-striped mb-5 pb-5" style="max-width: 500px;">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Order number</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Time</th>
+                </tr>
+            </thead>
+            {% for booked in staff.booked_on.all %}
+            <tbody>
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ booked.order.order_number }}</td>
+                    <td>{{ booked.date }}</td>
+                    <td>{{ booked.time }}</td>
+                </tr>
+            </tbody>
+            {% endfor %}
+        </table>
+        <hr style="max-width: 500px; color: red; height: 5px;">
+        {% endfor %}
+    </div>
+</div>
+{% endblock admin_dashboard %}

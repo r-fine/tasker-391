@@ -1,0 +1,26 @@
+<nav class="navbar navbar-light d-flex justify-content-end" style="background-color: oldlace;">
+    <div style="margin-right: 12%;">
+        <div class="dropdown">
+            <a href="#" class="d-flex align-items-center link-secondary text-decoration-none dropdown-toggle"
+                id="dropdownUser2" data-bs-toggle="dropdown" aria-expanded="false">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                    class="bi bi-person-fill" viewBox="0 0 16 16">
+                    <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                </svg>
+                <strong>Account</strong>
+            </a>
+            <ul class="dropdown-menu text-small shadow" aria-labelledby="dropdownUser2">
+                <li><a class="dropdown-item" href="{% url 'accounts:staff_form' staff.id %}">Profile</a>
+                <li>
+                    <hr class="dropdown-divider">
+                </li>
+                <li>
+                    <form class="d-none" id="logOutForm" method="post" action="{% url 'account_logout' %}">
+                        {% csrf_token %}
+                    </form>
+                    <a class="dropdown-item" href="#" onclick="logOut()">Sign out</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>

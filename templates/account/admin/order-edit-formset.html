@@ -1,0 +1,35 @@
+<!-- {% extends '../../base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}Order - Formset{% endblock%}
+{% block content %}
+<section class="my-2 pt-3">
+    <div class="mx-auto mb-5" style="max-width: 550px;">
+        {% include 'includes/message-alert.html' %}
+        <form method="POST" enctype='multipart/form-data'>
+            {% csrf_token %}
+            {{ form.management_form }}
+            <h3>Update order services</h3>
+            <hr>
+            {% for item_form in form.forms %}
+            {% if item_form.instance.id %}
+            <span class="text-primary fw-bold fs-5">Item {{ forloop.counter}}: {{ item_form.instance }}</span>
+            {% else %}
+            {% if form.forms|length > 1 %}
+            <span class="text-success fw-bold fs-5">Add another item</span>
+            {% else %}
+            <span class="text-info fs-5">Add an item</span>
+            {% endif %}
+            {% endif %}
+            {{ item_form.service|as_crispy_field }}
+            {{ item_form.assigned_staff|as_crispy_field }}
+            {{ item_form.status|as_crispy_field }}
+            {{ item_form.is_reviewable|as_crispy_field }}
+            <hr style="height: 3px; color: red;">
+            {% endfor %}
+            <div class="row justify-content-xs-center mt-3 mx-auto">
+                <button type="submit" class="btn btn-primary">update</button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %} -->

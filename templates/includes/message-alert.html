@@ -1,9 +1,19 @@
 {% if messages %}
 {% for message in messages %}
 {% if message.tags != 'error' %}
-<div class="text-center alert alert-{{ message.tags }}">{{ message|safe }}</div>
+<div class="text-center alert alert-{{ message.tags }}">
+    {{ message|safe }}
+    <button type="button" class="btn" data-bs-dismiss="alert" aria-label="Close">
+        <sup><i class="bi bi-x-lg"></i></sup>
+    </button>
+</div>
 {% else %}
-<div class="text-center alert alert-danger">{{ message|safe }}</div>
+<div class="text-center alert alert-danger">
+    {{ message|safe }}
+    <button type="button" class="btn" data-bs-dismiss="alert" aria-label="Close">
+        <sup><i class="bi bi-x-lg"></i></sup>
+    </button>
+</div>
 {% endif %}
 {% endfor %}
 {% endif %}

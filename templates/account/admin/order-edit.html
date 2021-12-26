@@ -1,21 +1,30 @@
-{% extends './admin-dashboard.html' %}
+{% extends '../../base.html' %}
 {% load crispy_forms_tags %}
 <!-- {% load widget_tweaks %} -->
 {% block title %}Order Item - Edit{% endblock%}
-{% block admin_dashboard %}
-<section class="mt-5 pt-5 mb-5 pb-5" style="min-height:84vh">
-    <div class="card mx-auto mt-5 pt-5" style="max-width: 425px; margin-top:100px;">
-        <div class="card-body">
-            {% include 'includes/message-alert.html' %}
-            <h1>Edit Order</h1>
-            <form method='POST'>
-                {% csrf_token %}
-                {{ form|crispy }}
-                <div class="row justify-content-xs-center mt-3">
-                    <button type="submit" class="btn btn-secondary">Save</button>
-                </div>
-            </form>
+{% block content %}
+<section class="my-2 pt-3">
+    <div class="mx-auto mb-5" style="max-width: 550px;">
+        {% include 'includes/message-alert.html' %}
+        <div class="row d-flex me-auto mt-3">
+            <div>
+                <a href="{% url 'accounts:order_list' %}" type="button" class="btn btn-outline-secondary mt-3">&laquo;
+                    Back
+                </a>
+            </div>
         </div>
+        <hr>
+        <h1 class="text-center text-primary">Edit Order</h1>
+        <hr>
+        <form method='POST'>
+            {% csrf_token %}
+            {{ form|crispy }}
+            <div class="row justify-content-xs-center mt-3 mx-auto">
+                <button type="submit" class="btn btn-secondary">Save</button>
+                <a href="{% url 'accounts:order_list' %}" type="button" class="btn btn-outline-secondary mt-3">&laquo;
+                    Back</a>
+            </div>
+        </form>
     </div>
 </section>
-{% endblock admin_dashboard %}
+{% endblock %}

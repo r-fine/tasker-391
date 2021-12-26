@@ -1,64 +1,343 @@
 {% extends "../base.html" %}
 {% load static %}
-<!-- {% load crispy_forms_tags %} -->
-{% block title %}{{ service.name }}{% endblock%}
+{% load crispy_forms_tags %}
+{% block title %} {{ service.name }} {% endblock %}
+{% block head %}
+<style>
+    ul#id_rating li {
+        display: inline-block;
+    }
+
+    div.form-group>label {
+        margin-top: 10px;
+    }
+
+    .asteriskField {
+        color: red;
+    }
+</style>
+{% endblock head %}
 {% block content %}
-<div class="container mt-5 pt-5 mb-5 pb-5">
-    <dvi class="row">
-        <div class="col-8">
-            <h1>{{ service.name }}</h1>
-            <p>Description: {{ service.description }}</p>
-            <img alt="Responsive image" src="{{ service.image.url }}" />
+
+<div class="container">
+    <div
+        class="row g-3 m-3 p-3 m-sm-3 p-sm-3 m-md-5 p-md-5 m-lg-5 p-lg-5 mx-sm-2 px-sm-2 mx-md-4 px-md-4 mx-lg-4 px-lg-4">
+        <div class="col-md-5 px-3 col-lg-5 order-md-last p-0 order-1">
+            <div class="d-grid gap-2">
+                <h3 class="mb-3">Available Services</h3>
+                {% include 'includes/message-alert.html' %}
+                <div class="accordion" id="accordionExample">
+                    {% for s in service_options %}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="heading{{s.id}}">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapse{{s.id}}" aria-expanded="true"
+                                aria-controls="collapse{{s.id}}">
+                                {{ s.name }}
+                            </button>
+                        </h2>
+                        <div id="collapse{{s.id}}" class="accordion-collapse collapse" aria-labelledby="heading{{s.id}}"
+                            data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <p>
+                                    Summary: <br>
+                                    <span class="text-muted">{{ s.summary|safe }}</span>
+                                </p>
+                                <p>
+                                    Pricing: <br>
+                                    <span class="text-muted">{{ s.pricing|safe }}</span>
+                                </p>
+                                <a href="{% url "orders:add_item" s.id %}" class="btn btn-outline-secondary">Book</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="alert alert-warning">No listed service</div>
+                    {% endfor %}
+                </div>
+
+            </div>
         </div>
-        <div class="col-4">
-            <h3>Avaibale services</h3>
-            <div class="accordion" id="accordionExample">
-                {% for s in service_options %}
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="heading{{s.id}}">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapse{{s.id}}" aria-expanded="true" aria-controls="collapse{{s.id}}">
-                            {{ s.name }}
-                        </button>
-                    </h2>
-                    <div id="collapse{{s.id}}" class="accordion-collapse collapse" aria-labelledby="heading{{s.id}}"
-                        data-bs-parent="#accordionExample">
-                        <div class="accordion-body">
-                            <p>
-                                Summary: <br>
-                                <span class="text-muted">{{ s.summary }}</span>
-                            </p>
-                            <p>
-                                Notes: <br>
-                                <span class="text-muted">{{ s.notes }}</span>
-                            </p>
-                            <a href="{% url "orders:add_item" s.id %}" class="btn btn-outline-secondary">Book</a>
+        <div class="col-md-7 col-lg-7 p-0">
+            <h1>{{ service.name }}</h1>
+            <div class="card mb-3 border-0 me-5">
+                <div class="row g-0">
+                    <div class="col-md-12">
+                        <div class="card-body p-1">
+                            <div class="bg-light"><img class="img-fluid mx-auto d-block" width="500px" height="500px"
+                                    alt="Responsive image" src="{{ service.image.url }}"> </div>
                         </div>
                     </div>
                 </div>
-                {% empty %}
-                <div class="alert alert-warning">No listed service</div>
-                {% endfor %}
             </div>
         </div>
-    </dvi>
-    <div class="container mt-5">
-        <form method="POST">
-            {% include 'includes/message-alert.html' %}
-            {% csrf_token %}
-            {{ form|crispy }}
-            {% if ordered %}
-            {% if is_reviewed %}
-            <button class="btn btn-secondary mt-3" type="submit">Update Review</button>
-            {% else %}
-            <button class="btn btn-secondary mt-3" type="submit">Submit Review</button>
-            {% endif %}
-            {% else %}
-            <button class="btn btn-secondary mt-3" type="submit" disabled>Submit Review</button>
-            <br>
-            <span class="text-muted">You need purchase this order first to review</span>
-            {% endif %}
-        </form>
+    </div>
+
+    <div class="container mx-3 mb-5">
+        <div class="row">
+            <div class="col-2">
+                <div class="position-sticky" style="top: 8em;">
+                    <nav id="navbar-example3"
+                        class="navbar navbar-light bg-light flex-column align-items-stretch p-3 text-center">
+                        <nav class="nav nav-pills flex-column">
+                            <a class="navbar-brand text-primary my-2" href="#item-1">Description</a>
+                            <a class="navbar-brand text-primary my-2" href="#item-2">Reviews</a>
+                        </nav>
+                    </nav>
+                </div>
+            </div>
+            <div class="col-10">
+                <div data-bs-spy="scroll" data-bs-target="#navbar-example3" data-bs-offset="0" tabindex="0">
+                    <h3 class="text-primary fw-bold" id="item-1">#Description:</h3>
+                    <p>
+                        {{ service.description|safe }}
+                    </p>
+                    <div class="col-8">
+                        <div class="d-flex justify-content-between mt-5">
+                            <div>
+                                <h3 class="text-primary fw-bold" id="item-2">#Reviews:</h3>
+                            </div>
+                            <div>
+                                {% if my_review %}
+                                <button type="button" class="btn btn-sm btn-outline-primary me-4 mt-1"
+                                    data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    update my review
+                                </button>
+                                {% else %}
+                                <button type="button" class="btn btn-sm btn-outline-primary me-4 mt-1"
+                                    data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                    write a review
+                                </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <p>
+                        {% if reviews or my_review %}
+                        <div class="alert alert-{% if service.average_review >= 3 %}success{% else %}primary{% endif %}"
+                            style="width: 15%;">
+                            <h2><span class="text-warning"><i class="bi bi-star-fill"></i></span>
+                                {{ service.average_review }}</h2> <span class="ms-4 ps-2">out of
+                                5</span>
+                        </div>
+                        {% endif %}
+                    </p>
+
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title fw-bold" id="exampleModalLabel">Submit a review</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+
+                                    <form method="POST">
+                                        {% include 'includes/message-alert.html' %}
+                                        {% csrf_token %}
+                                        {{ form.media }}
+                                        <div class="d-flex justify-content-between">
+                                            <div><label>Rating<span class="asteriskField">*</span></label></div>
+                                            <div class="me-4">{{ form.rating }}</div>
+                                        </div>
+                                        {{ form.service_option|as_crispy_field }}
+                                        {{ form.subject|as_crispy_field }}
+                                        {{ form.review|as_crispy_field }}
+                                        {% if ordered %}
+                                        {% if my_review %}
+                                        <div class="row justify-content-center mx-auto">
+                                            <button class="btn btn-primary mt-3" type="submit">Update Review</button>
+                                        </div>
+                                        {% else %}
+                                        <div class="row justify-content-center mx-auto">
+                                            <button class="btn btn-primary mt-3" type="submit">Submit Review</button>
+                                        </div>
+                                        {% endif %}
+                                        {% else %}
+                                        <span class="text-danger">You need purchase this order first to review</span>
+                                        {% endif %}
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-8">
+
+                            {% if my_review %}
+                            <h4>My Review:</h4>
+                            <div class="list-group-item list-group-item-action my-2">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">Reviewed by: {{ my_review.user.full_name }}</h5>
+                                    <small class="text-muted">
+                                        on:
+                                        {{ my_review.created_at }}{% if my_review.created_at|date:"Y-m-d-H-i-s" == my_review.updated_at|date:"Y-m-d-H-i-s" %}{% else %}(edited){% endif %}
+                                    </small>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <p class="mb-1">
+                                            {% if my_review.rating == 5 %}
+                                            <span class="text-warning">
+                                                <i class="bi bi-star-fill"></i>
+                                                <i class="bi bi-star-fill"></i>
+                                                <i class="bi bi-star-fill"></i>
+                                                <i class="bi bi-star-fill"></i>
+                                                <i class="bi bi-star-fill"></i>
+                                            </span>
+                                            {% elif my_review.rating == 4 %}
+                                            <span class="text-warning">
+                                                <i class="bi bi-star-fill"></i>
+                                                <i class="bi bi-star-fill"></i>
+                                                <i class="bi bi-star-fill"></i>
+                                                <i class="bi bi-star-fill"></i>
+                                            </span>
+                                            {% elif my_review.rating == 3 %}
+                                            <span class="text-warning">
+                                                <i class="bi bi-star-fill"></i>
+                                                <i class="bi bi-star-fill"></i>
+                                                <i class="bi bi-star-fill"></i>
+                                            </span>
+                                            {% elif my_review.rating == 2 %}
+                                            <span class="text-warning">
+                                                <i class="bi bi-star-fill"></i>
+                                                <i class="bi bi-star-fill"></i>
+                                            </span>
+                                            {% elif my_review.rating == 1 %}
+                                            <span class="text-warning">
+                                                <i class="bi bi-star-fill"></i>
+                                            </span>
+                                            {% endif %}
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <a href="{% url 'services:delete_review' my_review.id %}" type="button"
+                                            class="text-danger me-2"
+                                            onclick="return confirm('Are you sure you want to delete this review?')">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                <p class="mb-1"><span class="fs-4 fw-bold">"</span>{{ my_review.subject }}<span
+                                        class="fs-4 fw-bold">"</span></p>
+                                <p class="mb-1">
+                                    {{ my_review.review|safe }}
+                                </p>
+                                <small class="text-muted">
+                                    For:
+                                    {% for s in my_review.service_option.all %}{{ s }}{% if not forloop.last %},
+                                    {% endif %}{% endfor %}
+                                </small>
+                            </div>
+                            {% endif %}
+                            <div class="overflow-auto mt-5" style="height: 800px;">
+                                <div class="d-flex justify-content-between me-3">
+                                    <div>
+                                        <h4>All Reviews:</h4>
+                                    </div>
+                                    <div>(Total {{ service.count_review }}
+                                        review{{ service.count_review|pluralize }})
+                                    </div>
+                                </div>
+                                {% for r in reviews %}
+                                <div class="list-group my-3">
+                                    <div class="list-group-item list-group-item-action">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <h5 class="mb-1">Reviewed by: {{ r.user.full_name }}</h5>
+                                            <small class="text-muted">on:
+                                                {{ r.created_at }}{% if my_review.created_at|date:"Y-m-d-H-i-s" == my_review.updated_at|date:"Y-m-d-H-i-s" %}{% else %}(edited){% endif %}</small>
+                                        </div>
+                                        {% if request.user.is_superuser %}
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <p class="mb-1"><span class="text-warning"><i
+                                                            class="bi bi-star-fill"></i></span> {{ r.rating }}
+                                                </p>
+                                            </div>
+                                            <div>
+                                                <a href="{% url 'services:delete_review' r.id %}" type="button"
+                                                    class="text-danger me-2"
+                                                    onclick="return confirm('Are you sure you want to delete this review?')">
+                                                    <i class="bi bi-trash-fill"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                        {% else %}
+                                        <p class="mb-1"><span class="text-warning"><i
+                                                    class="bi bi-star-fill"></i></span>{{ r.rating }} out of 5</p>
+                                        {% endif %}
+                                        <p class="mb-1"><span class="fs-4 fw-bold">"</span>{{ r.subject }}<span
+                                                class="fs-4 fw-bold">"</span></p>
+                                        <p class="mb-1">
+                                            {{ r.review|safe }}
+                                        </p>
+                                        <small class="text-muted">
+                                            For:
+                                            {% for s in r.service_option.all %}{{ s }}{% if not forloop.last %},
+                                            {% endif %}{% endfor %}
+                                        </small>
+                                    </div>
+                                </div>
+                                {% empty %}
+                                {% if my_review %}
+                                <div class="alert alert-secondary text-center me-5">
+                                    This service has no other review yet
+                                </div>
+                                {% else %}
+                                <div class="alert alert-secondary text-center me-5">
+                                    This service has no other review yet
+                                </div>
+                                {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <!-- <div class="col-4">
+                            <h4 class="mb-3">Submit a review:</h4>
+                            <form method="POST">
+                                {% include 'includes/message-alert.html' %}
+                                {% csrf_token %}
+                                {{ form.media }}
+                                <div class="d-flex justify-content-between">
+                                    <div><label>Rating<span class="asteriskField">*</span></label></div>
+                                    <div class="me-4">{{ form.rating }}</div>
+                                </div>
+                                {{ form.service_option|as_crispy_field }}
+                                {{ form.subject|as_crispy_field }}
+                                {{ form.review|as_crispy_field }}
+                                {% if ordered %}
+                                {% if my_review %}
+                                <button class="btn btn-secondary mt-3" type="submit">Update Review</button>
+                                {% else %}
+                                <button class="btn btn-secondary mt-3" type="submit">Submit Review</button>
+                                {% endif %}
+                                {% else %}
+                                <button class="btn btn-secondary mt-3" type="submit" disabled>Submit Review</button>
+                                <br>
+                                <span class="text-muted">You need purchase this order first to review</span>
+                                {% endif %}
+                            </form>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#id_service_option').select2({
+            dropdownParent: $('#exampleModal'),
+            placeholder: "Select one or more options",
+            allowClear: true,
+            width: '100%',
+        });
+    });
+</script>
 {% endblock %}
