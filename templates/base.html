@@ -23,8 +23,7 @@
     <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
         <div class="container px-4 px-lg-5">
             {% load get_group %}
-            <a class="navbar-brand" aria-current="page"
-                href="{% if request.user.is_superuser %}{% url 'accounts:admin_dashboard' %}{% elif request.user|has_group:'STAFF' %}{% url 'accounts:staff_dashboard' %}{% else %}/{% endif %}">
+            <a class="navbar-brand" aria-current="page" href="/">
                 <img src="/static/logo4.png" alt="brand logo" style="aspect-ratio:1039/588;width:135px;">
             </a>
             <div class="collapse navbar-collapse" id="navbarCollapse">
