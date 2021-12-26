@@ -108,7 +108,7 @@ class ServiceOptionTable(tables.Table):
     class Meta:
         model = ServiceOption
         template_name = 'django_tables2/bootstrap4.html'
-        fields = ('service', 'name', 'edit', 'delete',)
+        fields = ('name', 'service', 'edit', 'delete',)
         attrs = {
             'class': 'table table-striped table-hover',
             'id': 'myTable',
