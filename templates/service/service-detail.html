@@ -47,7 +47,10 @@
                                     <span class="text-primary fw-bold">Pricing:</span> <br>
                                     <span class="text-muted">{{ s.pricing|safe }}</span>
                                 </p>
-                                <a href="{% url "orders:add_item" s.id %}" class="btn btn-outline-secondary">Book</a>
+                                <div class="row justify-content-center mx-auto">
+                                    <a href="{% url "orders:add_item" s.id %}"
+                                        class="btn btn-outline-primary fw-bold">Book Now</a>
+                                </div>
                             </div>
                         </div>
                     </div>
