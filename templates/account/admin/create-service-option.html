@@ -7,7 +7,7 @@
         {% include 'includes/message-alert.html' %}
         <div class="row d-flex me-auto mt-3">
             <div>
-                <a href="{% url 'accounts:service_table' %}" type="button"
+                <a href="{% url 'accounts:service_option_table' %}" type="button"
                     class="btn btn-outline-secondary mt-3">&laquo;
                     Back
                 </a>
@@ -22,7 +22,7 @@
             {{ form|crispy }}
             <div class="row justify-content-xs-center mt-3 mx-auto">
                 <button type="submit" class="btn btn-secondary">Save</button>
-                <a href="{% url 'accounts:service_table' %}" type="button"
+                <a href="{% url 'accounts:service_option_table' %}" type="button"
                     class="btn btn-outline-secondary mt-3">&laquo; Back</a>
             </div>
         </form>
