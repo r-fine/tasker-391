@@ -48,7 +48,7 @@ class StaffEditForm(forms.ModelForm):
 
     class Meta:
         model = Staff
-        fields = ['department', 'profile_pic', 'phone', 'address', 'is_active']
+        fields = ['department', 'profile_pic', 'phone', 'address']
 
 
 class LocalUserForm(forms.ModelForm):
