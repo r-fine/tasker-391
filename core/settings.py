@@ -10,7 +10,7 @@ SECRET_KEY = 'django-insecure-kb!nn%q25by6@+0rqr#_uz9xy(q$=ycyg4=t#plp)m4qhm3s6&
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['servicio-391.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['servicio-391.herokuapp.com']
 
 
 # Application definition
@@ -75,12 +75,6 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 # Database
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -91,16 +85,7 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'cse391Final',
-#         'USER': 'postgres',
-#         'PASSWORD': 'pgpasswd',
-#         'HOST': '127.0.0.1',
-#         'PORT': '5432',
-#     }
-# }
+
 
 # Password validation
 

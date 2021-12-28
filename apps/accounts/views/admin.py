@@ -380,6 +380,14 @@ def order_completed(request, pk):
     order.is_reviewable = True
     order.save()
 
+    try:
+        obj = StaffBookedDateTime.objects.get(
+            staff=order.assigned_staff, order=order.order, order_item=order
+        )
+        obj.delete()
+    except StaffBookedDateTime.DoesNotExist:
+        pass
+
     email_to = order.user.email
     subject = "Order #{0} update".format(order.order.order_number)
     message = "Your task {0} has been completed".format(order)
@@ -398,4 +406,12 @@ def order_cancelled(request, pk):
     order.is_reviewable = False
     order.save()
 
+    try:
+        obj = StaffBookedDateTime.objects.get(
+            staff=order.assigned_staff, order=order.order, order_item=order
+        )
+        obj.delete()
+    except StaffBookedDateTime.DoesNotExist:
+        pass
+    
     return redirect('accounts:order_list')
