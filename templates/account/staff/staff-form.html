@@ -45,8 +45,6 @@
                 {% render_field form.phone pattern="[0-9]{11}" %}
             </div>
             {{ form.address|as_crispy_field }}
-            {% if request.user.is_superuser %}
-            {{ form.is_active|as_crispy_field }}
             {% endif %}
             <div class="row justify-content-xs-center mt-3 mx-auto">
                 <button type="submit" class="btn btn-secondary">Save</button>
