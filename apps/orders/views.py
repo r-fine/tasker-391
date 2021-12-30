@@ -99,8 +99,8 @@ def add_item(request, service_option_id):
         order_item.save()
         messages.success(request, 'Added to order list.')
 
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    # return redirect('orders:create_order')
+    # return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return redirect('orders:create_order')
 
 
 @login_required
@@ -115,5 +115,5 @@ def remove_item(request, service_option_id, order_item_id):
     order_item.delete()
     messages.error(request, 'Removed from order')
 
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-    # return redirect('orders:create_order')
+    # return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    return redirect('orders:create_order')

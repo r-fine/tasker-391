@@ -30,7 +30,7 @@ def search(request):
             q = form.cleaned_data['q']
 
     res1 = ServiceOption.objects.annotate(similarity=TrigramSimilarity(
-        'name', q)).select_related('service').filter(similarity__gte=0.22).order_by('-similarity')
+        'name', q)).select_related('service').filter(similarity__gte=0.15).order_by('-similarity')
     res2 = ServiceOption.objects.annotate(similarity=TrigramSimilarity(
         'service__name', q)).select_related('service').filter(similarity__gte=0.18).order_by('-similarity')
 
